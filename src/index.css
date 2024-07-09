@@ -127,7 +127,12 @@
     color: var(--error-color);
     margin-top: 0.5rem;
   }
-  
+
+
+  input .error {
+    border : 1px  solid var(--error-color)
+  }
+   
   /* Smooth scrolling for anchor links */
   html {
     scroll-behavior: smooth;
