@@ -13,6 +13,11 @@ export default function WorkoutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (Number(load) < 1 || Number(reps) < 1) {
+        setError("Load and reps must be at least 1");
+        return;
+      }
+
     const workout = { title, load, reps };
 
     const response = await fetch("http://localhost:3001/api/workouts", {
@@ -43,25 +48,34 @@ export default function WorkoutForm() {
   return (
     <form className="create" onSubmit={handleSubmit}>
       <h3>Add a new Workout</h3>
-      <label htmlFor="">Exrecise Title:</label>
+      <label htmlFor="title">Exrecise Title:</label>
       <input
         type="text"
+        id="title"
+        placeholder="Enter workout title"
+        required
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         className={emptyFields.includes('title') ? 'error' : ''}
       />
-      <label htmlFor="">Load (kg):</label>
+      <label htmlFor="load">Load (kg):</label>
       <input
         type="number"
+        placeholder="Enter load (kg)"
+        required
         value={load}
         onChange={(e) => setLoad(e.target.value)}
+        min= "1"
         className={emptyFields.includes('load')? 'error' : ''}
       />
-      <label htmlFor="">Reps:</label>
+      <label htmlFor="reps">Reps:</label>
       <input
         type="number"
+        placeholder="Enter reps"
+        required
         value={reps}
         onChange={(e) => setReps(e.target.value)}
+        min= "1"
         className={emptyFields.includes('reps')? 'error' : ''}
       />
       <button type="submit">Add Workout</button>
