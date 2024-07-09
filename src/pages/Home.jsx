@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import WorkoutDetails from "../components/WorkoutDetails";
 import WorkoutForm from "../components/WorkoutForm";
+import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
 export default function Home() {
-  const [workouts, setWorkouts] = useState([]);
+
+const {workouts, dispatch } = useWorkoutContext()
 
   useEffect(() => {
     // Fetch data on component mount
@@ -14,7 +16,7 @@ export default function Home() {
       const data = await response.json();
 
       if (response.ok) {
-        setWorkouts(data);
+        dispatch({ type: "SET_WORKOUTS", payload: data });
       }
     };
 
