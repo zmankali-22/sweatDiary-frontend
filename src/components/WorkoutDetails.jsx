@@ -26,8 +26,8 @@ export default function WorkoutDetails({workout}) {
         <h4>{workout.title}</h4>
         <p><strong>Load (kg): </strong> {workout.load}</p>
         <p><strong>Reps : </strong> {workout.reps}</p>
-        <p>{workout.creaTedAt}</p>
-        <span onClick = {handleClick} >delete</span>
+        <p>{workout.createdAt}</p>
+        <i className="fas fa-trash-alt delete-icon" onClick={handleClick}></i>
 
     </div>
     
