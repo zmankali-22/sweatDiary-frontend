@@ -14,15 +14,20 @@ export default function Navbar() {
     <header className="bg-background border-b">
       <nav className="navbar flex justify-between items-center max-w-screen-xl mx-auto px-4 h-16">
         <div className="flex-shrink-0">
-          <Link to="/">
+          <Link to={user ? "/home" : "/"}>
             <h1 className="text-xl font-bold">Sweat Diary</h1>
           </Link>
         </div>
         <div className="flex space-x-4">
           {user ? (
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-muted-foreground">{user.email}</span>
-              <button onClick={handleClick} className="text-sm font-medium">
+              <span className="text-sm text-muted-foreground">
+                {user.email}
+              </span>
+              <button
+                onClick={handleClick}
+                className="text-sm font-medium"
+              >
                 Log out
               </button>
             </div>
