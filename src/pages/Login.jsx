@@ -1,30 +1,66 @@
-import { useState } from "react"
-import { useLogin } from "../hooks/useLogin"
+import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
+
+// Custom ErrorMessage component
+const ErrorMessage = ({ message }) => (
+  <Alert variant="destructive" className="mt-4">
+    <AlertDescription>{message}</AlertDescription>
+  </Alert>
+);
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, error, loading } = useLogin();
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-   const {login, error, loading} = useLogin()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await login(email, password);
+  };
 
-    const handleSubmit = async(e) => {
-        e.preventDefault()
-        await login(email, password)
-    }
   return (
-    <form className="login" onSubmit={handleSubmit}>
-        <h3>Login</h3>
-        <label>
-          Email:
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </label>
-        <label>
-          Password:
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </label>
-        <button disabled={loading}>Login</button>
-        {error && <div className="error">{error}</div>}
-  
+    <form className="space-y-4 max-w-sm mx-auto mt-8" onSubmit={handleSubmit}>
+      <h3 className="text-2xl font-bold mb-6">Login</h3>
+      
+      <div className="space-y-2">
+        <Label htmlFor="email">Email:</Label>
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="password">Password:</Label>
+        <Input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      
+      <Button type="submit" disabled={loading} className="w-full">
+        {loading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Logging in...
+          </>
+        ) : (
+          'Login'
+        )}
+      </Button>
+      
+      {error && <ErrorMessage message={error} />}
     </form>
-  )
+  );
 }
