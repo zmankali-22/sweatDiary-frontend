@@ -28,6 +28,7 @@ export default function Navbar({ openModal }) {
               <Link to="/statistics" className="text-sm font-medium">
                 Statistics
               </Link>
+             
               <span className="text-sm text-muted-foreground">
                 {user.email}
               </span>
@@ -40,10 +41,16 @@ export default function Navbar({ openModal }) {
             </div>
           ) : (
             <div className="flex space-x-4">
-              <button onClick={() => openModal('login')} className="text-sm font-medium">
+              <button 
+                onClick={() => openModal('login')} 
+                className="text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+              >
                 Login
               </button>
-              <button onClick={() => openModal('signup')} className="text-sm font-medium">
+              <button 
+                onClick={() => openModal('signup')} 
+                className="text-sm font-medium bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+              >
                 Signup
               </button>
             </div>

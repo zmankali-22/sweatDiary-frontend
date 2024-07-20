@@ -54,7 +54,7 @@ export default function Login({ closeModal }) {
         />
       </div>
       
-      <Button type="submit" disabled={loading} className="w-full">
+      <Button type="submit" disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 text-white">
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

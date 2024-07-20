@@ -181,7 +181,7 @@ export default function WorkoutForm() {
         />
       </div>
 
-      <Button type="submit" disabled={loading} className="w-full">
+      <Button type="submit" disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white">
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
