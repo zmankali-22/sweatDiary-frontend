@@ -15,7 +15,7 @@ export default function Navbar({ openModal }) {
     <header className="bg-background border-b">
       <nav className="navbar flex justify-between items-center max-w-screen-xl mx-auto px-4 h-16">
         <div className="flex-shrink-0">
-          <Link to="/">
+          <Link to="/" >
             <h1 className="text-xl font-bold">Sweat Diary</h1>
           </Link>
         </div>

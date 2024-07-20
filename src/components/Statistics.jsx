@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Loader2 } from 'lucide-react';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -29,7 +30,7 @@ export default function Statistics() {
     }
   }, [user]);
 
-  if (!stats) return <div>Loading statistics...</div>;
+  if (!stats) return <div className="flex justify-center items-center h-96"><Loader2 className="animate-spin h-10 w-10 text-blue-500" /></div>;
 
   const chartData = {
     labels: stats.categoryCounts?.map(c => c._id) || [],
