@@ -18,6 +18,10 @@ export default function WorkoutForm() {
   const [title, setTitle] = useState("");
   const [load, setLoad] = useState("");
   const [reps, setReps] = useState("");
+  const [duration, setDuration] = useState("");
+  const [caloriesBurned, setCaloriesBurned] = useState("");
+  const [category, setCategory] = useState("");
+  const [notes, setNotes] = useState("");
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,11 +33,20 @@ export default function WorkoutForm() {
       setError("You need to be logged in to create a workout");
       return;
     }
-    if (Number(load) < 1 || Number(reps) < 1) {
-      setError("Load and reps must be at least 1");
+    if (Number(load) < 1 || Number(reps) < 1 || Number(duration) < 1) {
+      setError("Load, reps, and duration must be at least 1");
       return;
     }
-    const workout = { title, load, reps };
+    const workout = {
+      title,
+      load,
+      reps,
+      duration,
+      caloriesBurned,
+      category,
+      notes,
+    };
+    console.log("Sending workout data:", workout); // Add this line
     setLoading(true);
     const response = await fetch(
       "http://localhost:3001/api/workouts",
@@ -47,6 +60,7 @@ export default function WorkoutForm() {
       }
     );
     const json = await response.json();
+    console.log("Received response:", json); // Add this line
     setLoading(false);
     if (!response.ok) {
       setError(json.error);
@@ -57,14 +71,22 @@ export default function WorkoutForm() {
       setReps("");
       setError(null);
       setEmptyFields([]);
+      setDuration("");
+      setCaloriesBurned("");
+      setCategory("");
+      setNotes("");
+
       dispatch({ type: "CREATE_WORKOUT", payload: json });
     }
   };
 
   return (
-    <form className="space-y-4 max-w-sm mx-auto mt-8" onSubmit={handleSubmit}>
+    <form
+      className="space-y-4 max-w-sm mx-auto mt-8"
+      onSubmit={handleSubmit}
+    >
       <h3 className="text-2xl font-bold mb-6">Add a new Workout</h3>
-      
+
       <div className="space-y-2">
         <Label htmlFor="title">Exercise Title:</Label>
         <Input
@@ -74,10 +96,12 @@ export default function WorkoutForm() {
           required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className={emptyFields.includes("title") ? "border-red-500" : ""}
+          className={
+            emptyFields.includes("title") ? "border-red-500" : ""
+          }
         />
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="load">Load (kg):</Label>
         <Input
@@ -88,10 +112,12 @@ export default function WorkoutForm() {
           value={load}
           onChange={(e) => setLoad(e.target.value)}
           min="1"
-          className={emptyFields.includes("load") ? "border-red-500" : ""}
+          className={
+            emptyFields.includes("load") ? "border-red-500" : ""
+          }
         />
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="reps">Reps:</Label>
         <Input
@@ -102,10 +128,59 @@ export default function WorkoutForm() {
           value={reps}
           onChange={(e) => setReps(e.target.value)}
           min="1"
-          className={emptyFields.includes("reps") ? "border-red-500" : ""}
+          className={
+            emptyFields.includes("reps") ? "border-red-500" : ""
+          }
         />
       </div>
-      
+
+      <div className="space-y-2">
+        <Label htmlFor="duration">Duration (minutes):</Label>
+        <Input
+          id="duration"
+          type="number"
+          value={duration}
+          onChange={(e) => setDuration(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="caloriesBurned">Calories Burned:</Label>
+        <Input
+          id="caloriesBurned"
+          type="number"
+          value={caloriesBurned}
+          onChange={(e) => setCaloriesBurned(e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="category">Category:</Label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+          className="w-full p-2 border rounded"
+        >
+          <option value="">Select a category</option>
+          <option value="Cardio">Cardio</option>
+          <option value="Strength">Strength</option>
+          <option value="Flexibility">Flexibility</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="notes">Notes:</Label>
+        <textarea
+          id="notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
+      </div>
+
       <Button type="submit" disabled={loading} className="w-full">
         {loading ? (
           <>
@@ -113,10 +188,10 @@ export default function WorkoutForm() {
             Adding Workout...
           </>
         ) : (
-          'Add Workout'
+          "Add Workout"
         )}
       </Button>
-      
+
       {error && <ErrorMessage message={error} />}
     </form>
   );

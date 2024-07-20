@@ -1,5 +1,7 @@
+// components/Signup.jsx
 import { useState } from "react";
 import { useSignup } from "../hooks/useSignup";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,27 +14,26 @@ const ErrorMessage = ({ message }) => (
   </Alert>
 );
 
-export default function Signup() {
+export default function Signup({ closeModal }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [localError, setLocalError] = useState('');
   const { signup, error, loading } = useSignup();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLocalError('');
-    if (password !== confirmPassword) {
-      setLocalError('Passwords do not match');
-      return;
+    const success = await signup(email, password, confirmPassword);
+    if (success) {
+      closeModal();
+      navigate('/home');
     }
-    await signup(email, password);
   };
 
   return (
-    <form className="space-y-4 max-w-sm mx-auto mt-8" onSubmit={handleSubmit}>
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <h3 className="text-2xl font-bold mb-6">Sign Up</h3>
-
+      
       <div className="space-y-2">
         <Label htmlFor="email">Email:</Label>
         <Input
@@ -43,7 +44,7 @@ export default function Signup() {
           required
         />
       </div>
-
+      
       <div className="space-y-2">
         <Label htmlFor="password">Password:</Label>
         <Input
@@ -65,7 +66,7 @@ export default function Signup() {
           required
         />
       </div>
-
+      
       <Button type="submit" disabled={loading} className="w-full">
         {loading ? (
           <>
@@ -76,8 +77,7 @@ export default function Signup() {
           'Sign Up'
         )}
       </Button>
-
-      {localError && <ErrorMessage message={localError} />}
+      
       {error && <ErrorMessage message={error} />}
     </form>
   );

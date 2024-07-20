@@ -52,6 +52,22 @@ export default function WorkoutDetails({ workout }) {
         <p className="text-sm text-gray-600">
           <strong>Reps:</strong> {workout.reps}
         </p>
+        <p className="text-sm text-gray-600">
+          <strong>Category:</strong> {workout.category}
+        </p>
+        <p className="text-sm text-gray-600">
+          <strong>Duration:</strong> {workout.duration} minutes
+        </p>
+        {workout.caloriesBurned && (
+          <p className="text-sm text-gray-600">
+            <strong>Calories Burned:</strong> {workout.caloriesBurned}
+          </p>
+        )}
+        {workout.notes && (
+          <p className="text-sm text-gray-600">
+            <strong>Notes:</strong> {workout.notes}
+          </p>
+        )}
         <p className="text-xs text-gray-400 mt-2">
           {formatDistanceToNow(new Date(workout.createdAt), {
             addSuffix: true,

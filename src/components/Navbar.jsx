@@ -1,8 +1,9 @@
+// components/Navbar.jsx
 import { Link } from "react-router-dom";
 import useLogout from "../hooks/useLogout";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-export default function Navbar() {
+export default function Navbar({ openModal }) {
   const { logout } = useLogout();
   const { user } = useAuthContext();
 
@@ -14,13 +15,19 @@ export default function Navbar() {
     <header className="bg-background border-b">
       <nav className="navbar flex justify-between items-center max-w-screen-xl mx-auto px-4 h-16">
         <div className="flex-shrink-0">
-          <Link to={user ? "/home" : "/"}>
+          <Link to="/">
             <h1 className="text-xl font-bold">Sweat Diary</h1>
           </Link>
         </div>
         <div className="flex space-x-4">
           {user ? (
             <div className="flex items-center space-x-4">
+              <Link to="/home" className="text-sm font-medium">
+                Home
+              </Link>
+              <Link to="/statistics" className="text-sm font-medium">
+                Statistics
+              </Link>
               <span className="text-sm text-muted-foreground">
                 {user.email}
               </span>
@@ -33,12 +40,12 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex space-x-4">
-              <Link to="/login" className="text-sm font-medium">
+              <button onClick={() => openModal('login')} className="text-sm font-medium">
                 Login
-              </Link>
-              <Link to="/signup" className="text-sm font-medium">
+              </button>
+              <button onClick={() => openModal('signup')} className="text-sm font-medium">
                 Signup
-              </Link>
+              </button>
             </div>
           )}
         </div>

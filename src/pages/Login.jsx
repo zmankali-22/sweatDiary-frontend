@@ -1,30 +1,35 @@
 import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 
-// Custom ErrorMessage component
 const ErrorMessage = ({ message }) => (
   <Alert variant="destructive" className="mt-4">
     <AlertDescription>{message}</AlertDescription>
   </Alert>
 );
 
-export default function Login() {
+export default function Login({ closeModal }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, error, loading } = useLogin();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password);
+    const success = await login(email, password);
+    if (success) {
+      closeModal();
+      navigate('/home');
+    }
   };
 
   return (
-    <form className="space-y-4 max-w-sm mx-auto mt-8" onSubmit={handleSubmit}>
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <h3 className="text-2xl font-bold mb-6">Login</h3>
       
       <div className="space-y-2">
