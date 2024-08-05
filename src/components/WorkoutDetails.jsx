@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import toast from 'react-hot-toast';
 
 export default function WorkoutDetails({ workout }) {
   const { dispatch } = useWorkoutContext();
@@ -34,9 +35,9 @@ export default function WorkoutDetails({ workout }) {
 
     if (response.ok) {
       dispatch({ type: "DELETE_WORKOUT", payload: data });
-      console.log("Workout deleted successfully", data);
+      toast.success("Workout deleted successfully");
     } else {
-      console.error("Failed to delete workout:", data);
+      toast.error("Failed to delete workout");
     }
   };
 

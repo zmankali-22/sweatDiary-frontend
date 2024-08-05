@@ -1,6 +1,7 @@
 // App.jsx
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -40,6 +41,16 @@ function App() {
           {modalContent === 'signup' && <Signup closeModal={closeModal} />}
         </Modal>
       </BrowserRouter>
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
     </div>
   );
 }

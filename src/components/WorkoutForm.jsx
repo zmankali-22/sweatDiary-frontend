@@ -46,7 +46,6 @@ export default function WorkoutForm() {
       category,
       notes,
     };
-    console.log("Sending workout data:", workout); // Add this line
     setLoading(true);
     const response = await fetch(
       "http://localhost:3001/api/workouts",
@@ -60,7 +59,6 @@ export default function WorkoutForm() {
       }
     );
     const json = await response.json();
-    console.log("Received response:", json); // Add this line
     setLoading(false);
     if (!response.ok) {
       setError(json.error);
