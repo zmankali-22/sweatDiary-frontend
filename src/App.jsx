@@ -1,5 +1,5 @@
 // App.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
@@ -29,7 +29,7 @@ function App() {
         <Navbar openModal={openModal} />
         <main className="flex-grow">
           <Routes>
-            <Route path="/" element={<LandingPage openModal={openModal} />} />
+            <Route path="/" element={user ? <Navigate to="/home" />: <LandingPage openModal={openModal} />} />
             <Route path="/home" element={user ? <Home /> : <Navigate to="/" />} />
             <Route path="/statistics" element={user ? <Statistics /> : <Navigate to="/" />} />
           </Routes>
