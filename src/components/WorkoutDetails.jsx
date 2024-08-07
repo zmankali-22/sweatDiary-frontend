@@ -22,7 +22,7 @@ export default function WorkoutDetails({ workout }) {
 
   const handleDelete = async () => {
     const response = await fetch(
-      `https://sweatdiary-server.onrender.com//api/workouts/${workout._id}`,
+      `https://sweatdiary-server.onrender.com/api/workouts/${workout._id}`,
       {
         method: "DELETE",
         headers: {
