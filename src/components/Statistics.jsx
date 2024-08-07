@@ -13,7 +13,7 @@ export default function Statistics() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/stats', {
+        const response = await fetch('https://sweatdiary-server.onrender.com/api/stats', {
           headers: { 'Authorization': `Bearer ${user.token}` },
         });
         const json = await response.json();

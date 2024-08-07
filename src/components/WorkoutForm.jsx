@@ -48,7 +48,7 @@ export default function WorkoutForm() {
     };
     setLoading(true);
     const response = await fetch(
-      "http://localhost:3001/api/workouts",
+      "https://sweatdiary-server.onrender.com/api/workouts",
       {
         method: "POST",
         headers: {

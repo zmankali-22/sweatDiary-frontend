@@ -15,7 +15,7 @@ export default function Home() {
       setLoading(true);
       try {
         const response = await fetch(
-          "http://localhost:3001/api/workouts", 
+          "https://sweatdiary-server.onrender.com/api/workouts", 
           {
             headers: {
               'Authorization': `Bearer ${user.token}`,
