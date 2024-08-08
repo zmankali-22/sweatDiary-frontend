@@ -9,16 +9,17 @@ export default function Home() {
   const { workouts, dispatch } = useWorkoutContext();
   const { user } = useAuthContext();
   const [loading, setLoading] = useState(true);
+  const [workoutToEdit, setWorkoutToEdit] = useState(null);
 
   useEffect(() => {
     const fetchWorkout = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://sweatdiary-server.onrender.com/api/workouts", 
+          "https://sweatdiary-server.onrender.com/api/workouts",
           {
             headers: {
-              'Authorization': `Bearer ${user.token}`,
+              Authorization: `Bearer ${user.token}`,
             },
           }
         );
@@ -44,7 +45,11 @@ export default function Home() {
   }, [dispatch, user]);
 
   if (!user) {
-    return <div className="text-center mt-8">Please log in to view workouts.</div>;
+    return (
+      <div className="text-center mt-8">
+        Please log in to view workouts.
+      </div>
+    );
   }
 
   return (
@@ -59,15 +64,24 @@ export default function Home() {
           ) : workouts && workouts.length > 0 ? (
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {workouts.map((workout) => (
-                <WorkoutDetails key={workout._id} workout={workout} />
+                <WorkoutDetails
+                  key={workout._id}
+                  workout={workout}
+                  setWorkoutToEdit={setWorkoutToEdit}
+                />
               ))}
             </div>
           ) : (
-            <p className="text-center">No workouts found. Add a new one to get started!</p>
+            <p className="text-center">
+              No workouts found. Add a new one to get started!
+            </p>
           )}
         </div>
         <div className="md:col-span-4">
-          <WorkoutForm />
+          <WorkoutForm
+            workoutToEdit={workoutToEdit}
+            setWorkoutToEdit={setWorkoutToEdit}
+          />
         </div>
       </div>
     </div>

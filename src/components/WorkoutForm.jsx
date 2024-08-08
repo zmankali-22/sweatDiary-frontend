@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ const ErrorMessage = ({ message }) => (
   </Alert>
 );
 
-export default function WorkoutForm() {
+export default function WorkoutForm({ workoutToEdit, setWorkoutToEdit }) {
   const { dispatch } = useWorkoutContext();
   const [title, setTitle] = useState("");
   const [load, setLoad] = useState("");
@@ -25,7 +25,21 @@ export default function WorkoutForm() {
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const { user } = useAuthContext();
+
+
+  useEffect(() => {
+    if (workoutToEdit) {
+      setTitle(workoutToEdit.title);
+      setLoad(workoutToEdit.load);
+      setReps(workoutToEdit.reps);
+      setDuration(workoutToEdit.duration);
+      setCaloriesBurned(workoutToEdit.caloriesBurned);
+      setCategory(workoutToEdit.category);
+      setNotes(workoutToEdit.notes);
+    }
+  }, [workoutToEdit]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,10 +61,17 @@ export default function WorkoutForm() {
       notes,
     };
     setLoading(true);
+
+    const url = workoutToEdit
+    ? `https://sweatdiary-server.onrender.com/api/workouts/${workoutToEdit._id}`
+    : "https://sweatdiary-server.onrender.com/api/workouts";
+
+
+    const method = workoutToEdit ? "PATCH" : "POST";
     const response = await fetch(
-      "https://sweatdiary-server.onrender.com/api/workouts",
+      url,
       {
-        method: "POST",
+        method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
@@ -73,8 +94,16 @@ export default function WorkoutForm() {
       setCaloriesBurned("");
       setCategory("");
       setNotes("");
+      dispatch({
+        type: workoutToEdit ? "UPDATE_WORKOUT" : "CREATE_WORKOUT",
+        payload: json,
+      });
 
-      dispatch({ type: "CREATE_WORKOUT", payload: json });
+      if (workoutToEdit) {
+        setWorkoutToEdit(null);
+      }
+
+
     }
   };
 
@@ -83,7 +112,7 @@ export default function WorkoutForm() {
       className="space-y-4 max-w-sm mx-auto mt-8"
       onSubmit={handleSubmit}
     >
-      <h3 className="text-2xl font-bold mb-6">Add a new Workout</h3>
+      <h3 className="text-2xl font-bold mb-6"> {workoutToEdit ? "Edit Workout" : "Add a New Workout"}</h3>
 
       <div className="space-y-2">
         <Label htmlFor="title">Exercise Title:</Label>
@@ -183,10 +212,10 @@ export default function WorkoutForm() {
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Adding Workout...
+            {workoutToEdit ? "Updating Workout..." : "Adding Workout..."}
           </>
         ) : (
-          "Add Workout"
+         workoutToEdit ? "Update Workout" : "Add Workout"
         )}
       </Button>
 

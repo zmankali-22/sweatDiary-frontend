@@ -8,15 +8,17 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit } from "lucide-react";
 import toast from "react-hot-toast";
-import UpdateWorkoutForm from "./updateWorkoutForm";
 
-export default function WorkoutDetails({ workout }) {
+export default function WorkoutDetails({
+  workout,
+  setWorkoutToEdit,
+}) {
   const { dispatch } = useWorkoutContext();
   const { user } = useAuthContext();
-  const [isUpdating, setIsUpdating] = useState(false);
 
   if (!user) {
     return null;
@@ -43,12 +45,8 @@ export default function WorkoutDetails({ workout }) {
     }
   };
 
-  const handleUpdateClick = () => {
-    setIsUpdating(true);
-  };
-
-  const handleUpdateClose = () => {
-    setIsUpdating(false);
+  const handleEdit = () => {
+    setWorkoutToEdit(workout);
   };
 
   return (
@@ -86,13 +84,9 @@ export default function WorkoutDetails({ workout }) {
         </p>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleUpdateClick}
-        >
+        <Button variant="outline" size="sm" onClick={handleEdit}>
           <Edit size={16} className="mr-2" />
-          Update
+          Edit
         </Button>
         <Button
           variant="destructive"
@@ -104,15 +98,6 @@ export default function WorkoutDetails({ workout }) {
           Delete
         </Button>
       </CardFooter>
-
-      {isUpdating && (
-        <UpdateWorkoutForm
-          workout={workout}
-          onClose={handleUpdateClose}
-          user={user}
-          dispatch={dispatch}
-        />
-      )}
     </Card>
   );
 }
