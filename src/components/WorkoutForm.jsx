@@ -17,8 +17,6 @@ const ErrorMessage = ({ message }) => (
 export default function WorkoutForm({
   workoutToEdit,
   setWorkoutToEdit,
-  onUpdate,
-  onCreate
 }) {
   const { dispatch } = useWorkoutContext();
   const [title, setTitle] = useState("");
@@ -88,7 +86,6 @@ export default function WorkoutForm({
       });
       const json = await response.json();
       setLoading(false);
-
       if (!response.ok) {
         setError(json.error);
         setEmptyFields(json.emptyFields || []);
@@ -97,9 +94,10 @@ export default function WorkoutForm({
         setEmptyFields([]);
 
         if (workoutToEdit) {
-          onUpdate(json);  // Use the onUpdate callback
+          dispatch({ type: "UPDATE_WORKOUT", payload: json });
+          setWorkoutToEdit(null);
         } else {
-          onCreate(json);  // Use the onCreate callback
+          dispatch({ type: "CREATE_WORKOUT", payload: json });
         }
 
         setTitle("");
@@ -109,8 +107,6 @@ export default function WorkoutForm({
         setCaloriesBurned("");
         setCategory("");
         setNotes("");
-
-        setWorkoutToEdit(null);
 
         toast.success(
           workoutToEdit
@@ -123,6 +119,19 @@ export default function WorkoutForm({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancel = () => {
+    setWorkoutToEdit(null);
+    setTitle("");
+    setLoad("");
+    setReps("");
+    setDuration("");
+    setCaloriesBurned("");
+    setCategory("");
+    setNotes("");
+    setError(null);
+    setEmptyFields([]);
   };
 
   return (
@@ -228,24 +237,36 @@ export default function WorkoutForm({
         />
       </div>
 
-      <Button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-orange-500 hover:bg-orange-600 text-white"
-      >
-        {loading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {workoutToEdit
-              ? "Updating Workout..."
-              : "Adding Workout..."}
-          </>
-        ) : workoutToEdit ? (
-          "Update Workout"
-        ) : (
-          "Add Workout"
+      <div className="flex justify-between space-x-4">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {workoutToEdit
+                ? "Updating Workout..."
+                : "Adding Workout..."}
+            </>
+          ) : workoutToEdit ? (
+            "Update Workout"
+          ) : (
+            "Add Workout"
+          )}
+        </Button>
+
+        {workoutToEdit && (
+          <Button
+            type="button"
+            onClick={handleCancel}
+            className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800"
+          >
+            Cancel
+          </Button>
         )}
-      </Button>
+      </div>
 
       {error && <ErrorMessage message={error} />}
     </form>
