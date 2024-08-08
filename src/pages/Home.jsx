@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import WorkoutDetails from "../components/WorkoutDetails";
 import WorkoutForm from "../components/WorkoutForm";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
@@ -11,38 +11,47 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [workoutToEdit, setWorkoutToEdit] = useState(null);
 
-  useEffect(() => {
-    const fetchWorkout = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          "https://sweatdiary-server.onrender.com/api/workouts",
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
-        const data = await response.json();
-
-        if (response.ok) {
-          dispatch({ type: "SET_WORKOUTS", payload: data });
-        } else {
-          console.error("Failed to fetch workouts");
+  const fetchWorkouts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        "https://sweatdiary-server.onrender.com/api/workouts",
+        {
+          headers: {
+            "Authorization": `Bearer ${user.token}`,
+          },
         }
-      } catch (error) {
-        console.error("Error fetching workouts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      );
+      const data = await response.json();
 
-    if (user) {
-      fetchWorkout();
-    } else {
+      if (response.ok) {
+        dispatch({ type: "SET_WORKOUTS", payload: data });
+      } else {
+        console.error("Failed to fetch workouts");
+      }
+    } catch (error) {
+      console.error("Error fetching workouts:", error);
+    } finally {
       setLoading(false);
     }
   }, [dispatch, user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchWorkouts();
+    } else {
+      setLoading(false);
+    }
+  }, [fetchWorkouts, user]);
+
+  const handleWorkoutUpdate = useCallback((updatedWorkout) => {
+    dispatch({ type: "UPDATE_WORKOUT", payload: updatedWorkout });
+    setWorkoutToEdit(null);
+  }, [dispatch]);
+
+  const handleWorkoutCreate = useCallback((newWorkout) => {
+    dispatch({ type: "CREATE_WORKOUT", payload: newWorkout });
+  }, [dispatch]);
 
   if (!user) {
     return (
@@ -65,7 +74,7 @@ export default function Home() {
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {workouts.map((workout) => (
                 <WorkoutDetails
-                  key={workout._id}
+                  key={`${workout._id}-${workout.updatedAt || workout.createdAt}`}
                   workout={workout}
                   setWorkoutToEdit={setWorkoutToEdit}
                 />
@@ -81,6 +90,8 @@ export default function Home() {
           <WorkoutForm
             workoutToEdit={workoutToEdit}
             setWorkoutToEdit={setWorkoutToEdit}
+            onUpdate={handleWorkoutUpdate}
+            onCreate={handleWorkoutCreate}
           />
         </div>
       </div>

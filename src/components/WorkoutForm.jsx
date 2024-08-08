@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ErrorMessage = ({ message }) => (
   <Alert variant="destructive" className="mt-4">
@@ -13,7 +14,12 @@ const ErrorMessage = ({ message }) => (
   </Alert>
 );
 
-export default function WorkoutForm({ workoutToEdit, setWorkoutToEdit }) {
+export default function WorkoutForm({
+  workoutToEdit,
+  setWorkoutToEdit,
+  onUpdate,
+  onCreate
+}) {
   const { dispatch } = useWorkoutContext();
   const [title, setTitle] = useState("");
   const [load, setLoad] = useState("");
@@ -28,16 +34,15 @@ export default function WorkoutForm({ workoutToEdit, setWorkoutToEdit }) {
 
   const { user } = useAuthContext();
 
-
   useEffect(() => {
     if (workoutToEdit) {
       setTitle(workoutToEdit.title);
       setLoad(workoutToEdit.load);
       setReps(workoutToEdit.reps);
       setDuration(workoutToEdit.duration);
-      setCaloriesBurned(workoutToEdit.caloriesBurned);
+      setCaloriesBurned(workoutToEdit.caloriesBurned || "");
       setCategory(workoutToEdit.category);
-      setNotes(workoutToEdit.notes);
+      setNotes(workoutToEdit.notes || "");
     }
   }, [workoutToEdit]);
 
@@ -47,7 +52,12 @@ export default function WorkoutForm({ workoutToEdit, setWorkoutToEdit }) {
       setError("You need to be logged in to create a workout");
       return;
     }
-    if (Number(load) < 1 || Number(reps) < 1 || Number(duration) < 1) {
+    if (
+      Number(load) < 1 ||
+      Number(reps) < 1 ||
+      Number(duration) < 1 ||
+      Number(caloriesBurned) < 1
+    ) {
       setError("Load, reps, and duration must be at least 1");
       return;
     }
@@ -63,47 +73,55 @@ export default function WorkoutForm({ workoutToEdit, setWorkoutToEdit }) {
     setLoading(true);
 
     const url = workoutToEdit
-    ? `https://sweatdiary-server.onrender.com/api/workouts/${workoutToEdit._id}`
-    : "https://sweatdiary-server.onrender.com/api/workouts";
-
+      ? `https://sweatdiary-server.onrender.com/api/workouts/${workoutToEdit._id}`
+      : "https://sweatdiary-server.onrender.com/api/workouts";
 
     const method = workoutToEdit ? "PATCH" : "POST";
-    const response = await fetch(
-      url,
-      {
+    try {
+      const response = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(workout),
-      }
-    );
-    const json = await response.json();
-    setLoading(false);
-    if (!response.ok) {
-      setError(json.error);
-      setEmptyFields(json.emptyFields || []);
-    } else {
-      setTitle("");
-      setLoad("");
-      setReps("");
-      setError(null);
-      setEmptyFields([]);
-      setDuration("");
-      setCaloriesBurned("");
-      setCategory("");
-      setNotes("");
-      dispatch({
-        type: workoutToEdit ? "UPDATE_WORKOUT" : "CREATE_WORKOUT",
-        payload: json,
       });
+      const json = await response.json();
+      setLoading(false);
 
-      if (workoutToEdit) {
+      if (!response.ok) {
+        setError(json.error);
+        setEmptyFields(json.emptyFields || []);
+      } else {
+        setError(null);
+        setEmptyFields([]);
+
+        if (workoutToEdit) {
+          onUpdate(json);  // Use the onUpdate callback
+        } else {
+          onCreate(json);  // Use the onCreate callback
+        }
+
+        setTitle("");
+        setLoad("");
+        setReps("");
+        setDuration("");
+        setCaloriesBurned("");
+        setCategory("");
+        setNotes("");
+
         setWorkoutToEdit(null);
+
+        toast.success(
+          workoutToEdit
+            ? "Workout updated successfully"
+            : "Workout added successfully"
+        );
       }
-
-
+    } catch (error) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,7 +130,9 @@ export default function WorkoutForm({ workoutToEdit, setWorkoutToEdit }) {
       className="space-y-4 max-w-sm mx-auto mt-8"
       onSubmit={handleSubmit}
     >
-      <h3 className="text-2xl font-bold mb-6"> {workoutToEdit ? "Edit Workout" : "Add a New Workout"}</h3>
+      <h3 className="text-2xl font-bold mb-6">
+        {workoutToEdit ? "Edit Workout" : "Add a New Workout"}
+      </h3>
 
       <div className="space-y-2">
         <Label htmlFor="title">Exercise Title:</Label>
@@ -208,14 +228,22 @@ export default function WorkoutForm({ workoutToEdit, setWorkoutToEdit }) {
         />
       </div>
 
-      <Button type="submit" disabled={loading} className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+      <Button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+      >
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {workoutToEdit ? "Updating Workout..." : "Adding Workout..."}
+            {workoutToEdit
+              ? "Updating Workout..."
+              : "Adding Workout..."}
           </>
+        ) : workoutToEdit ? (
+          "Update Workout"
         ) : (
-         workoutToEdit ? "Update Workout" : "Add Workout"
+          "Add Workout"
         )}
       </Button>
 
