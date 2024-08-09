@@ -22,10 +22,10 @@ export default function WorkoutForm({
 }) {
   const { dispatch } = useWorkoutContext();
   const [title, setTitle] = useState("");
-  const [load, setLoad] = useState("");
-  const [reps, setReps] = useState("");
-  const [duration, setDuration] = useState("");
-  const [caloriesBurned, setCaloriesBurned] = useState("");
+  const [load, setLoad] = useState(1);
+  const [reps, setReps] = useState(1);
+  const [duration, setDuration] = useState(1);
+  const [caloriesBurned, setCaloriesBurned] = useState(1);
   const [category, setCategory] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState(null);
@@ -109,10 +109,10 @@ export default function WorkoutForm({
         }
 
         setTitle("");
-        setLoad("");
-        setReps("");
-        setDuration("");
-        setCaloriesBurned("");
+        setLoad(1);
+        setReps(1);
+        setDuration(1);
+        setCaloriesBurned(1);
         setCategory("");
         setNotes("");
 
@@ -132,10 +132,10 @@ export default function WorkoutForm({
   const handleCancel = () => {
     setWorkoutToEdit(null);
     setTitle("");
-    setLoad("");
-    setReps("");
-    setDuration("");
-    setCaloriesBurned("");
+    setLoad(1);
+    setReps(1);
+    setDuration(1);
+    setCaloriesBurned(1);
     setCategory("");
     setNotes("");
     setError(null);
