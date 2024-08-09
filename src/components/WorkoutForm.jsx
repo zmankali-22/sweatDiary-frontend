@@ -101,12 +101,11 @@ export default function WorkoutForm({
             payload: { ...workoutToEdit, ...json },
           });
           setWorkoutToEdit(null);
+          if (onWorkoutUpdated) {
+            onWorkoutUpdated();
+          }
         } else {
           dispatch({ type: "CREATE_WORKOUT", payload: json });
-        }
-
-        if (onWorkoutUpdated) {
-          onWorkoutUpdated();
         }
 
         setTitle("");
