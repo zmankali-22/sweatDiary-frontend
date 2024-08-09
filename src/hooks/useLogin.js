@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useAuthContext } from "./useAuthContext"
+import { API_URL } from "@/lib/constants"
 
 export const useLogin = () => {
     const [error, setError] = useState(null)
@@ -11,7 +12,7 @@ export const useLogin = () => {
         setError(null)
 
         try {
-            const response = await fetch('https://sweatdiary-server.onrender.com/api/user/login', {
+            const response = await fetch(`${API_URL}/api/user/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

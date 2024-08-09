@@ -1,6 +1,7 @@
 // hooks/useSignup.js
 import { useState } from "react"
 import { useAuthContext } from "./useAuthContext"
+import { API_URL } from "@/lib/constants"
 
 export const useSignup = () => {
     const [error, setError] = useState(null)
@@ -19,7 +20,7 @@ export const useSignup = () => {
         }
 
         try {
-            const response = await fetch('https://sweatdiary-server.onrender.com/api/user/signup', {
+            const response = await fetch(`${API_URL}/api/user/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -5,6 +5,9 @@ import { useWorkoutContext } from "../hooks/useWorkoutContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Loader2 } from "lucide-react";
 import WorkoutView from "@/components/WorkoutView";
+import { API_URL } from "@/lib/constants";
+
+
 
 export default function Home() {
   const { workouts, dispatch } = useWorkoutContext();
@@ -19,7 +22,7 @@ export default function Home() {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://sweatdiary-server.onrender.com/api/workouts",
+          `${API_URL}/api/workouts`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,

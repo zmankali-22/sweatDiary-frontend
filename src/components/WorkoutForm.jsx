@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { API_URL } from "@/lib/constants";
 
 const ErrorMessage = ({ message }) => (
   <Alert variant="destructive" className="mt-4">
@@ -72,8 +73,8 @@ export default function WorkoutForm({
     setLoading(true);
 
     const url = workoutToEdit
-      ? `https://sweatdiary-server.onrender.com/api/workouts/${workoutToEdit._id}`
-      : "https://sweatdiary-server.onrender.com/api/workouts";
+      ? `${API_URL}/api/workouts/${workoutToEdit._id}`
+      : `${API_URL}/api/workouts`;
 
     const method = workoutToEdit ? "PATCH" : "POST";
     try {

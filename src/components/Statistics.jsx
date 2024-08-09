@@ -3,6 +3,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Loader2 } from 'lucide-react';
+import { API_URL } from '@/lib/constants';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -13,7 +14,7 @@ export default function Statistics() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('https://sweatdiary-server.onrender.com/api/stats', {
+        const response = await fetch(`${API_URL}/api/stats`, {
           headers: { 'Authorization': `Bearer ${user.token}` },
         });
         const json = await response.json();

@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit, Eye } from "lucide-react";
 import toast from "react-hot-toast";
+import { API_URL } from "@/lib/constants";
 
 export default function WorkoutDetails({
   workout,
@@ -28,7 +29,7 @@ export default function WorkoutDetails({
   const handleDelete = async (e) => {
     e.stopPropagation();
     const response = await fetch(
-      `https://sweatdiary-server.onrender.com/api/workouts/${workout._id}`,
+      `${API_URL}/api/workouts/${workout._id}`,
       {
         method: "DELETE",
         headers: {
