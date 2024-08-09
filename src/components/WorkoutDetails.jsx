@@ -10,12 +10,13 @@ import {
 } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit } from "lucide-react";
+import { Trash2, Edit, Eye } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function WorkoutDetails({
   workout,
   setWorkoutToEdit,
+  onViewWorkout
 }) {
   const { dispatch } = useWorkoutContext();
   const { user } = useAuthContext();
@@ -24,7 +25,8 @@ export default function WorkoutDetails({
     return null;
   }
 
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
     const response = await fetch(
       `https://sweatdiary-server.onrender.com/api/workouts/${workout._id}`,
       {
@@ -45,12 +47,14 @@ export default function WorkoutDetails({
     }
   };
 
-  const handleEdit = () => {
+  const handleEdit = (e) => {
     setWorkoutToEdit(workout);
+    e.stopPropagation()
   };
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card   className="w-full max-w-sm cursor-pointer hover:shadow-md transition-shadow duration-200"
+    onClick={() => onViewWorkout(workout)}>
       <CardHeader>
         <CardTitle>{workout.title}</CardTitle>
       </CardHeader>
@@ -84,6 +88,10 @@ export default function WorkoutDetails({
         </p>
       </CardContent>
       <CardFooter className="flex justify-between">
+
+    
+
+
         <Button variant="outline" size="sm" onClick={handleEdit}>
           <Edit size={16} className="mr-2" />
           Edit

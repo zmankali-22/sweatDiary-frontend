@@ -17,6 +17,7 @@ const ErrorMessage = ({ message }) => (
 export default function WorkoutForm({
   workoutToEdit,
   setWorkoutToEdit,
+  onWorkoutUpdated,
 }) {
   const { dispatch } = useWorkoutContext();
   const [title, setTitle] = useState("");
@@ -94,10 +95,17 @@ export default function WorkoutForm({
         setEmptyFields([]);
 
         if (workoutToEdit) {
-          dispatch({ type: "UPDATE_WORKOUT", payload: json });
+          dispatch({
+            type: "UPDATE_WORKOUT",
+            payload: { ...workoutToEdit, ...json },
+          });
           setWorkoutToEdit(null);
         } else {
           dispatch({ type: "CREATE_WORKOUT", payload: json });
+        }
+
+        if (onWorkoutUpdated) {
+          onWorkoutUpdated();
         }
 
         setTitle("");

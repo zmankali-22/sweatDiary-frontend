@@ -4,13 +4,15 @@ import WorkoutForm from "../components/WorkoutForm";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Loader2 } from "lucide-react";
+import WorkoutView from "@/components/WorkoutView";
 
 export default function Home() {
   const { workouts, dispatch } = useWorkoutContext();
   const { user } = useAuthContext();
   const [loading, setLoading] = useState(true);
   const [workoutToEdit, setWorkoutToEdit] = useState(null);
-  
+  const [workoutToView, setWorkoutToView] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const fetchWorkout = async () => {
@@ -43,7 +45,15 @@ export default function Home() {
     } else {
       setLoading(false);
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, refreshKey]);
+
+  const handleViewWorkout = (workout) => {
+    setWorkoutToView(workout);
+  };
+
+  const handleWorkoutUpdated = () => {
+    setRefreshKey(oldKey => oldKey + 1);
+  };
 
   if (!user) {
     return (
@@ -66,9 +76,12 @@ export default function Home() {
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {workouts.map((workout) => (
                 <WorkoutDetails
-                  key={`${workout._id}-${workout.updatedAt || workout.createdAt}`}
+                  key={`${workout._id}-${
+                    workout.updatedAt || workout.createdAt
+                  }`}
                   workout={workout}
                   setWorkoutToEdit={setWorkoutToEdit}
+                  onViewWorkout={handleViewWorkout}
                 />
               ))}
             </div>
@@ -82,9 +95,16 @@ export default function Home() {
           <WorkoutForm
             workoutToEdit={workoutToEdit}
             setWorkoutToEdit={setWorkoutToEdit}
+            onWorkoutUpdated={handleWorkoutUpdated}
           />
         </div>
       </div>
+      {workoutToView && (
+        <WorkoutView
+          workout={workoutToView}
+          onClose={() => setWorkoutToView(null)}
+        />
+      )}
     </div>
   );
 }
