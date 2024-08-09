@@ -205,6 +205,7 @@ export default function WorkoutForm({
           id="duration"
           type="number"
           value={duration}
+          min="1"
           onChange={(e) => setDuration(e.target.value)}
           required
         />
@@ -216,6 +217,7 @@ export default function WorkoutForm({
           id="caloriesBurned"
           type="number"
           value={caloriesBurned}
+          min="1"
           onChange={(e) => setCaloriesBurned(e.target.value)}
         />
       </div>
