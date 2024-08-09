@@ -13,37 +13,39 @@ export default function WorkoutView({ workout, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 transition-opacity duration-300 ease-in-out"
       onClick={handleOverlayClick}
     >
-      <div className="bg-white rounded-lg p-6 max-w-md w-full">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">{workout.title}</h2>
-          <Button onClick={onClose} variant="ghost">
-            <X className="w-6 h-6" />
+      <div className="bg-white rounded-lg shadow-2xl p-6 max-w-md w-full transform transition-all duration-300 ease-in-out scale-95 hover:scale-100">
+        <div className="flex justify-between items-center mb-6 border-b pb-3">
+          <h2 className="text-3xl font-bold text-gray-800">
+            {workout.title}
+          </h2>
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            className="hover:bg-gray-100 rounded-full p-2"
+          >
+            <X className="w-6 h-6 text-gray-600" />
           </Button>
         </div>
         <div className="space-y-2">
-          <p>
-            <strong>Load:</strong> {workout.load} kg
-          </p>
-          <p>
-            <strong>Reps:</strong> {workout.reps}
-          </p>
-          <p>
-            <strong>Duration:</strong> {workout.duration} minutes
-          </p>
-          <p>
-            <strong>Calories Burned:</strong>{" "}
-            {workout.caloriesBurned || "N/A"}
-          </p>
-          <p>
-            <strong>Category:</strong> {workout.category}
-          </p>
-          <p>
-            <strong>Notes:</strong> {workout.notes || "No notes"}
-          </p>
-          <p className="text-sm text-gray-500">
+          <InfoItem label="Load" value={`${workout.load} kg`} />
+          <InfoItem label="Reps" value={workout.reps} />
+          <InfoItem
+            label="Duration"
+            value={`${workout.duration} minutes`}
+          />
+          <InfoItem
+            label="Calories Burned"
+            value={workout.caloriesBurned || "N/A"}
+          />
+          <InfoItem label="Category" value={workout.category} />
+          <InfoItem
+            label="Notes"
+            value={workout.notes || "No notes"}
+          />
+          <p className="text-sm text-gray-500 italic mt-4">
             Created{" "}
             {formatDistanceToNow(new Date(workout.createdAt), {
               addSuffix: true,
@@ -51,6 +53,15 @@ export default function WorkoutView({ workout, onClose }) {
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+function InfoItem({ label, value }) {
+  return (
+    <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+      <span className="font-semibold text-gray-700">{label}:</span>
+      <span className="text-gray-800">{value}</span>
     </div>
   );
 }
