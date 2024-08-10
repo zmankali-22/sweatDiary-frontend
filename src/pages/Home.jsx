@@ -72,7 +72,7 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div className="md:col-span-8">
           {loading ? (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex justify-center items-center h-64" data-testid="loading">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           ) : workouts && workouts.length > 0 ? (

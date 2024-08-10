@@ -47,6 +47,7 @@ export default function WorkoutForm({
   }, [workoutToEdit]);
 
   const handleSubmit = async (e) => {
+    setError(null)
     e.preventDefault();
     if (!user) {
       setError("You need to be logged in to create a workout");
@@ -146,6 +147,7 @@ export default function WorkoutForm({
     <form
       className="space-y-4 max-w-sm mx-auto mt-8"
       onSubmit={handleSubmit}
+      data-testid="workout-form"
     >
       <h3 className="text-2xl font-bold mb-6">
         {workoutToEdit ? "Edit Workout" : "Add a New Workout"}

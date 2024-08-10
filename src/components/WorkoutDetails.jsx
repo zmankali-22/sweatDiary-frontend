@@ -1,3 +1,4 @@
+import React from 'react';
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 import { formatDistanceToNow } from "date-fns";
@@ -7,17 +8,17 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
+} from "./ui/card";
 
-import { Button } from "@/components/ui/button";
-import { Trash2, Edit, Eye } from "lucide-react";
+import { Button } from "./ui/button";
+import { Trash2, Pen } from "lucide-react";
 import toast from "react-hot-toast";
-import { API_URL } from "@/lib/constants";
+import { API_URL } from "../lib/constants";
 
 export default function WorkoutDetails({
   workout,
   setWorkoutToEdit,
-  onViewWorkout
+  onViewWorkout,
 }) {
   const { dispatch } = useWorkoutContext();
   const { user } = useAuthContext();
@@ -50,12 +51,14 @@ export default function WorkoutDetails({
 
   const handleEdit = (e) => {
     setWorkoutToEdit(workout);
-    e.stopPropagation()
+    e.stopPropagation();
   };
 
   return (
-    <Card   className="w-full max-w-sm cursor-pointer hover:shadow-md transition-shadow duration-200"
-    onClick={() => onViewWorkout(workout)}>
+    <Card
+      className="w-full max-w-sm cursor-pointer hover:shadow-md transition-shadow duration-200"
+      onClick={() => onViewWorkout(workout)}
+    >
       <CardHeader>
         <CardTitle>{workout.title}</CardTitle>
       </CardHeader>
@@ -89,12 +92,8 @@ export default function WorkoutDetails({
         </p>
       </CardContent>
       <CardFooter className="flex justify-between">
-
-    
-
-
         <Button variant="outline" size="sm" onClick={handleEdit}>
-          <Edit size={16} className="mr-2" />
+          <Pen size={16} className="mr-2" />
           Edit
         </Button>
         <Button

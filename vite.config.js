@@ -13,4 +13,10 @@ export default defineConfig({
   define: {
     "process.env.VITE_APP_TITLE": JSON.stringify("SweatDiary"),
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    css: true,
+  },
 });
